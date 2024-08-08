@@ -4,56 +4,38 @@ import Hero from "../hero/Hero";
 import DisplayMovieByCategory from "../../../../utils/components/DisplayMovieByCategory";
 
 const Landingpage = () => {
-  const [movieParam, setmovieParam] = useState({
-    pageParam: 1,
-    languageParam: "en-US",
-    searchParam: "",
-  });
-  const [nowPlayingList, setnowPlayingList] = useState([]);
-  const [topRatedList, settopRatedList] = useState([]);
-  const [popularList, setpopularList] = useState([]);
+  const [movieList, setMovieList] = useState([]);
 
   useEffect(() => {
     const fetchList = async () => {
-      const responseNowPlaying = await apiTMDB.getNowPlayingList();
-      setnowPlayingList(responseNowPlaying?.results);
-
-      const responseTopRated = await apiTMDB.getTopRatedList();
-      settopRatedList(responseTopRated?.results);
-
-      const responsePopular = await apiTMDB.getPopularList();
-      setpopularList(responsePopular?.results);
+      const AllMovie = await apiTMDB.getAllMovieLists();
+      setMovieList(AllMovie);
     };
     fetchList();
   }, []);
 
-  const checkIfAllFetched =
-    nowPlayingList.length !== 0 &&
-    topRatedList.length !== 0 &&
-    popularList.length !== 0;
-
   return (
     <div className="h-full w-full bg-gradient-to-t from-[#E6E6E6] relative">
-      {checkIfAllFetched && (
+      {movieList.length !== 0 && (
         <>
-          <Hero nowPlayingList={nowPlayingList[0]} />
+          <Hero nowPlayingList={movieList?.nowPlayingList.results[0]} />
 
-          <div className="h-auto w-full bg-black px-20 z-40">
-            <div className="-mt-20">
+          <div className="h-auto w-full bg-black md:px-20 px-0 flex flex-col items-center justify-center z-40 -mt-20">
+            <div className="w-full">
               <DisplayMovieByCategory
-                meta_data={nowPlayingList}
+                meta_data={movieList?.nowPlayingList.results}
                 title={"Now Playing"}
               />
             </div>
-            <div className="mt-10">
+            <div className="mt-10 w-full">
               <DisplayMovieByCategory
-                meta_data={topRatedList}
+                meta_data={movieList?.topRatedList.results}
                 title={"Top Rated"}
               />
             </div>
-            <div className="mt-10">
+            <div className="mt-10 w-full">
               <DisplayMovieByCategory
-                meta_data={popularList}
+                meta_data={movieList?.popularList.results}
                 title={"Popular"}
               />
             </div>

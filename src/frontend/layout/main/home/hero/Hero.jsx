@@ -22,7 +22,7 @@ const Hero = ({ nowPlayingList }) => {
   return (
     <div className="w-full min-screen bg-black flex flex-col justify-center">
       <div
-        className="w-full min-h-screen bg-cover bg-center items-center flex px-20 shadow-inner shadow-black "
+        className="w-full min-h-screen bg-cover bg-center items-center flex md:px-20 px-5 shadow-inner shadow-black "
         style={{
           backgroundImage: `${gradientOverlay}, url(${backgroundImage})`,
           backgroundBlendMode: "darken",
@@ -35,14 +35,14 @@ const Hero = ({ nowPlayingList }) => {
         <div className="w-full min-h-full max-h-max flex ">
           <img
             src={imgURL + nowPlayingList?.poster_path}
-            className="h-[300px] w-[200px] rounded-sm"
+            className="h-[300px] w-[200px] rounded-sm md:block hidden"
             alt={`${nowPlayingList?.title} poster`}
           />
           <div className="px-5 h-full w-full gap-2 flex flex-col">
             <h1 className="text-[50px] font-bold text-white">
               {nowPlayingList?.title}
             </h1>
-            <p className="w-[80%] text-[20px] text-white">
+            <p className="md:w-[80%] w-[100%] text-[20px] text-white">
               {nowPlayingList?.overview}
             </p>
             <label className="text-white">
