@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { apiTMDB } from "../../../utils/api/api";
 import Hero from "../../../utils/components/Hero";
-import DisplayMovieByCategory from "../../../utils/components/DisplayMovieByCategory";
+import DisplayMovieByCategory from "../../../utils/components/display_component/DisplayMovieByCategory";
 import Pagination from "../../../utils/components/Pagination";
 const SearchitemPage = () => {
   const searchedParams = useParams();
