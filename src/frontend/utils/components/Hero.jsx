@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import ModalDisplayMovieDetails from "../../../../utils/components/ModalDisplayMovieDetails";
-import { apiTMDB } from "../../../../utils/api/api";
+import ModalDisplayMovieDetails from "./modal/ModalDisplayMovieDetails";
+import { apiTMDB } from "../api/api";
 import { BiSolidMoviePlay } from "react-icons/bi";
-import { MovieImageURL } from "../../../../utils/utils/url";
+import { MovieImageURL } from "../utils/url";
 const Hero = ({ nowPlayingList }) => {
   const [open, setOpen] = useState(false);
   const [movieDetails, setmovieDetails] = useState([]);

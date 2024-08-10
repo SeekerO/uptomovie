@@ -3,9 +3,10 @@ import { AsyncImage } from "loadable-image";
 
 import { BiSolidCameraMovie } from "react-icons/bi";
 import CircularProgress from "../components/CircularProgress";
-import ModalDisplayMovieDetails from "../../utils/components/ModalDisplayMovieDetails";
+import ModalDisplayMovieDetails from "../../utils/components/modal/ModalDisplayMovieDetails";
 import { MovieImageURL } from "../utils/url";
-const MovieConfig = ({ movie, displayPercentage }) => {
+import ModalDisplayTvShowsDetails from "../components/modal/ModalDisplayTvShowDetails";
+const MovieConfig = ({ movie, displayPercentage, film }) => {
   const [openDetails, setopenDetails] = useState(false);
   const imgURL = MovieImageURL();
 
@@ -37,11 +38,23 @@ const MovieConfig = ({ movie, displayPercentage }) => {
       </div>
 
       {openDetails && movie.id && (
-        <ModalDisplayMovieDetails
-          inDisplay={openDetails}
-          setopenDetails={setopenDetails}
-          Movie_id={movie.id}
-        />
+        <>
+          {film !== "tv" ? (
+            <ModalDisplayMovieDetails
+              inDisplay={openDetails}
+              setopenDetails={setopenDetails}
+              Movie_id={movie}
+              film={film}
+            />
+          ) : (
+            <ModalDisplayTvShowsDetails
+              inDisplay={openDetails}
+              setopenDetails={setopenDetails}
+              Movie_id={movie}
+              film={film}
+            />
+          )}
+        </>
       )}
     </>
   );

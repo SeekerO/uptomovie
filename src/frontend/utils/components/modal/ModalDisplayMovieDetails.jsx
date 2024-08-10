@@ -2,17 +2,19 @@ import React, { useRef, useEffect, useState } from "react";
 // Package
 import { motion } from "framer-motion";
 import moment from "moment";
-import { tailspin } from "ldrs";
 
 // Utils
-import CarouselTrailers from "./CarouselTrailers";
-import MovieConfigPoster from "../config/MovieConfigPoster";
-import { MovieImageURL } from "../utils/url";
-import { apiTMDB } from "../api/api";
+import CarouselTrailers from "../CarouselTrailers";
+import MovieConfigPoster from "../../config/MovieConfigPoster";
+import { MovieImageURL } from "../../utils/url";
+import { apiTMDB } from "../../api/api";
 
-tailspin.register();
+// Icons
+import { IoMdClose } from "react-icons/io";
+import LoadingScreen from "../loading/LoadingScreen";
+import ProductionCompanies from "../ProductionCompanies";
 
-function DisplayMovieDetails({ inDisplay, setopenDetails, Movie_id }) {
+function DisplayMovieDetails({ inDisplay, setopenDetails, Movie_id, film }) {
   const ref = useRef(null);
   const [close, setClose] = useState(true);
   const imgURL = MovieImageURL();
@@ -20,22 +22,31 @@ function DisplayMovieDetails({ inDisplay, setopenDetails, Movie_id }) {
 
   useEffect(() => {
     if (Movie_id) {
-      movieSelection(Movie_id);
+      movieSelection(Movie_id.id);
     }
   }, [Movie_id]);
 
   const movieSelection = async (id) => {
-    const response = await apiTMDB.getSingleMovieData(id);
-    setselectedMovie(response);
+    if (film === undefined) {
+      const response = await apiTMDB.getSingleMovieData(id);
+      setselectedMovie(response);
+    } else {
+      const response = await apiTMDB.getSingleTvShowData(id);
+      setselectedMovie(response);
+    }
+  };
+
+  const closeAnimation = () => {
+    setClose(false);
+    setTimeout(() => {
+      setopenDetails(false);
+      setClose(true);
+    }, 1200);
   };
 
   const handleClickOutside = (event) => {
     if (ref.current && !ref.current.contains(event.target)) {
-      setClose(false);
-      setTimeout(() => {
-        setopenDetails(false);
-        setClose(true);
-      }, 1200);
+      closeAnimation();
     }
   };
 
@@ -59,20 +70,10 @@ function DisplayMovieDetails({ inDisplay, setopenDetails, Movie_id }) {
 
   if (!inDisplay) return null;
 
-  console.log(MovieData.length);
   return (
     <>
-      {MovieData.length === 0 ? (
-        <div className="fixed inset-0 bg-black bg-opacity-50 h-full rounded-sm w-screen flex items-center justify-center z-50">
-          <l-tailspin
-            ref={ref}
-            size="50"
-            stroke="5"
-            speed="0.9"
-            color="#EE2B47"
-            className="w-fit h-fit"
-          ></l-tailspin>
-        </div>
+      {MovieData?.length === 0 ? (
+        <LoadingScreen />
       ) : (
         <motion.div
           initial={{ opacity: 0 }}
@@ -101,6 +102,12 @@ function DisplayMovieDetails({ inDisplay, setopenDetails, Movie_id }) {
                 backgroundBlendMode: "darken",
               }}
             >
+              <div
+                onClick={() => closeAnimation()}
+                className="w-full  justify-end items-end md:hidden flex top-0 px-2 mt-4"
+              >
+                <IoMdClose className="text-[25px]" />
+              </div>
               <img
                 src={imgURL + MovieData?.backdrop_path}
                 alt="Movie Backdrop"
@@ -115,7 +122,7 @@ function DisplayMovieDetails({ inDisplay, setopenDetails, Movie_id }) {
                   close ? { duration: 1, delay: 1.5 } : { duration: 0.4 }
                 }
                 src={imgURL + MovieData?.poster_path}
-                className="h-[300px] w-fit z-50"
+                className="h-[300px] md:w-fit  w-[200px] z-50 md:mt-0 mt-10"
               />
               <motion.h1
                 initial={{ opacity: 0 }}
@@ -215,29 +222,12 @@ function DisplayMovieDetails({ inDisplay, setopenDetails, Movie_id }) {
                     Production Companies
                   </h2>
                   <div className="flex gap-2 mt-2 items-start px-2">
-                    {MovieData?.production_companies.map((comp, idx) => (
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={close ? { opacity: 1 } : { opacity: 0 }}
-                        transition={
-                          close
-                            ? { duration: 1, delay: idx }
-                            : { duration: 0.4 }
-                        }
-                        key={comp.id}
-                        className="flex flex-col"
-                      >
-                        {comp.logo_path !== null ? (
-                          <img
-                            src={imgURL + comp.logo_path}
-                            className="w-[100px] bg-white p-1 rounded-md "
-                          />
-                        ) : (
-                          <div className="min-w-[100px] max-w-[150px] bg-white text-black font-semibold p-1 rounded-md text-center">
-                            {comp.name}
-                          </div>
-                        )}
-                      </motion.div>
+                    {MovieData?.production_companies.map((comp, index) => (
+                      <ProductionCompanies
+                        key={index}
+                        item={comp}
+                        index={index}
+                      />
                     ))}
                   </div>
                 </motion.div>
@@ -284,7 +274,7 @@ function DisplayMovieDetails({ inDisplay, setopenDetails, Movie_id }) {
                   className="w-full"
                 >
                   <h1 className="text-[25px] font-semibold">Recommendations</h1>
-                  <div className="grid gap-4 grid-cols-[repeat(auto-fit,minmax(180px,1fr))] mx-auto my-0 w-full px-0.5">
+                  <div className="grid gap-4 md:grid-cols-[repeat(auto-fit,minmax(300px,1fr))] grid-cols-2 mx-auto my-0 w-full px-0.5">
                     {MovieData.recommendations.map((recom, idx) => (
                       <div key={recom.id} className="mt-10">
                         <MovieConfigPoster

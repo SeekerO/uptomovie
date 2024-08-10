@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import MenuList from "../../../utils/utils/MenuList";
+import MenuList from "../../utils/utils/MenuList";
 const Sidebar = ({ setShowSideBar, showSideBar }) => {
   const refSideBar = useRef();
   const handleClickOutside = (event) => {

@@ -3,10 +3,11 @@ import { Link } from "react-router-dom";
 const MenuList = ({ theme }) => {
   const Menu = [
     { title: "Home", href: "/" },
-    { title: "Movies", href: "/movies" },
-    { title: "TV Shows", href: "/tvshows" },
-    { title: "Top IMDB", href: "/topimbd" },
+    { title: "Movies", href: "/movies/1" },
+    { title: "TV Shows", href: "/tvshows/1" },
+    { title: "People", href: "/people/1" },
   ];
+
   return (
     <>
       {Menu.map((menu, index) => (

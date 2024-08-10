@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { CiSearch, CiCircleRemove } from "react-icons/ci";
 import { MdOutlineDoubleArrow } from "react-icons/md";
 import SearchBar from "../../utils/components/SearchBar";
-import { CiSearch, CiCircleRemove } from "react-icons/ci";
 import { motion } from "framer-motion";
-import Sidebar from "./sidebar/Sidebar";
+import Sidebar from "../sidebar/Sidebar";
 import Hamburger from "hamburger-react";
 import MenuList from "../../utils/utils/MenuList";
 const Header = () => {
@@ -19,7 +18,12 @@ const Header = () => {
             showSideBar ? "abosolute z-50" : ""
           } md:hidden block w-[20px]`}
         >
-          <Hamburger toggled={showSideBar} toggle={setShowSideBar} />
+          <Hamburger
+            label="Show menu"
+            distance="md"
+            toggled={showSideBar}
+            toggle={setShowSideBar}
+          />
         </div>
         <motion.div
           initial={{ x: -190 }}

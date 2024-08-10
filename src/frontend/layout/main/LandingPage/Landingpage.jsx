@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { apiTMDB } from "../../../../utils/api/api";
-import Hero from "../hero/Hero";
-import DisplayMovieByCategory from "../../../../utils/components/DisplayMovieByCategory";
+import { apiTMDB } from "../../../utils/api/api";
+import Hero from "../../../utils/components/Hero";
+import DisplayMovieByCategory from "../../../utils/components/display_component/DisplayMovieByCategory";
 
 const Landingpage = () => {
   const [movieList, setMovieList] = useState([]);

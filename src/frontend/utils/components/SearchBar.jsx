@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { CiSearch } from "react-icons/ci";
-import { IoChevronBack } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 const SearchBar = ({ isShowBar, setShowBar }) => {
   const [searchTerm, setSearchTerm] = useState();
   const [hide, setHide] = useState(false);
+  const searchPoint = useNavigate();
   const refSearchBar = useRef();
   useEffect(() => {
     setHide(!hide);
@@ -12,7 +13,7 @@ const SearchBar = ({ isShowBar, setShowBar }) => {
 
   const goToMovie = (e) => {
     e.preventDefault();
-    alert(true);
+    searchPoint("/searchedItem/" + searchTerm + "/" + 1 + "/" + "en-us");
   };
 
   const handleClickOutside = (event) => {
@@ -37,7 +38,7 @@ const SearchBar = ({ isShowBar, setShowBar }) => {
           ? { height: "fit-content", padding: "0.25rem" }
           : { height: 0 }
       }
-      className="flex bg-[#1D1F2B] bg-opacity-40 backdrop-blur-[2px] text-black md:w-[100dvh] w-[80%] mt-1 rounded-md items-center gap-1 overflow-hidden"
+      className="flex bg-[#1D1F2B] backdrop-blur-[5px] bg-opacity-40 text-black md:w-[100dvh] w-[80%] mt-1 rounded-md items-center gap-1 overflow-hidden"
     >
       <motion.form
         onSubmit={goToMovie}
@@ -49,6 +50,7 @@ const SearchBar = ({ isShowBar, setShowBar }) => {
         <CiSearch hidden={hide} className="text-[25px] text-[#EE2B47]" />
         <div className="w-full">
           <motion.input
+            placeholder="Search movie and tv shows here.."
             required
             onChange={(e) => setSearchTerm(e.target.value)}
             value={searchTerm}

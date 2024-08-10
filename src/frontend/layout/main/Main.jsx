@@ -6,7 +6,7 @@ import Router from "../../routes/router";
 const Main = () => {
   return (
     <div className="h-screen w-full flex flex-col overflow-y-auto text-[#F0EEE2] bg-black">
-      <header className="w-full justify-center flex mt-2 fixed  z-10">
+      <header className="w-full justify-center flex md:mt-2 mt-3 fixed  z-10">
         <Header />
       </header>
 
@@ -15,7 +15,7 @@ const Main = () => {
           <Router />
         </div>
         <div className="">
-          <Footer />
+          {/* <Footer /> */}
         </div>
       </main>
     </div>

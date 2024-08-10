@@ -1,52 +1,49 @@
-import React, { useState } from "react";
-const Modal = ({ onClose, content }) => {
-  return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-4 rounded shadow-lg relative">
-        <button onClick={onClose} className="absolute top-4 right-4 text-xl">
-          &times;
-        </button>
-        <div>{content}</div>
-      </div>
-    </div>
-  );
-};
-const List = ({ items, onItemClick }) => {
-  return (
-    <div className="flex flex-col items-center p-4">
-      {items.map((item) => (
-        <button
-          key={item.id}
-          onClick={() => onItemClick(item.id)}
-          className="px-4 py-2 mb-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-        >
-          Open {item.id}
-        </button>
-      ))}
-    </div>
-  );
-};
+import React, { useEffect, useState } from "react";
+import { apiTMDB } from "../../../utils/api/api";
+import DisplayMovieByCategory from "../../../utils/components/display_component/DisplayMovieByCategory";
+import { useNavigate, useParams } from "react-router-dom";
+import Pagination from "../../../utils/components/Pagination";
+import LoadingScreen from "../../../utils/components/loading/LoadingScreen";
 
 const Movies = () => {
-  const [openModal, setOpenModal] = useState(null);
+  const [allMovies, setAllMovies] = useState([]);
+  const moviesParams = useParams();
+  const nav = useNavigate();
+  useEffect(() => {
+    const fetchAllMovies = async () => {
+      const response = await apiTMDB.getAllTrendingMovies(moviesParams.page);
+      setAllMovies(response);
+    };
+    fetchAllMovies();
+  }, [moviesParams]);
 
-  const data = [
-    { id: "test1", content: "Content for Test 1" },
-    { id: "test2", content: "Content for Test 2" },
-  ];
-
-  const handleOpenModal = (id) => {
-    setOpenModal(id);
+  const handlePageChange = ({ selected }) => {
+    const pageNumber = selected + 1;
+    nav("/movies/" + pageNumber);
   };
-
-  const handleCloseModal = () => {
-    setOpenModal(null);
-  };
-
-  const selectedItem = data.find((item) => item.id === openModal);
 
   return (
-    <div className="w-full h-full items-center justify-center flex flex-col"></div>
+    <div className="w-full h-full md:px-20 px-10 flex flex-col">
+      {allMovies.length !== 0 ? (
+        <div className="mt-24 flex flex-col">
+          <DisplayMovieByCategory
+            meta_data={allMovies.results}
+            title={"Discover Movies"}
+          />
+          <div className="mt-10 w-full justify-center flex mb-10">
+            <Pagination
+              activePageNumber={parseInt(moviesParams.page) - 1}
+              total_items={allMovies.total_results}
+              handlePageChange={handlePageChange}
+            />
+          </div>
+        </div>
+      ) : (
+        <>
+          <LoadingScreen />
+        </>
+      )}
+    </div>
   );
 };
 
