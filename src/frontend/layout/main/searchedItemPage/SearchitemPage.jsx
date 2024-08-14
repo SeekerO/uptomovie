@@ -35,6 +35,7 @@ const SearchitemPage = () => {
               <DisplayMovieByCategory
                 meta_data={searchedItems?.results}
                 title={`Total searched items is ${searchedItems.total_results}`}
+                isSearch={true}
               />
             </div>
 

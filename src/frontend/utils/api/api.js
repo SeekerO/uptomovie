@@ -130,32 +130,16 @@ export const apiTMDB = {
 
   getSearchMovieByParam: async function (param) {
     const options = {
+      method: "GET",
+      url: `${pathname}/search/multi?query=${param.id}}&include_adult=false&language=${param.language}&page=${param.page}`,
       headers: {
         accept: "application/json",
         Authorization: `Bearer ${apiKey}`,
       },
     };
-
-    const endpoints = [
-      `${pathname}/search/tv?query=${param.id}}&include_adult=false&language=${param.language}&page=${param.page}`,
-      `${pathname}/search/movie?query=${param.id}&include_adult=false&language=${param.language}&page=${param.page}`,
-    ];
-
     try {
-      const [tvshows, movies] = await Promise.all(
-        endpoints.map((url) => axios.get(url, options))
-      );
-
-      const MoviesData = movies.data;
-      const TvShows = tvshows.data;
-      const combinedData = {
-        page: MoviesData.page, // or choose a logic to combine pages
-        results: [...MoviesData.results, ...TvShows.results],
-        total_pages: Math.max(MoviesData.total_pages, TvShows.total_pages), // or another logic if needed
-        total_results: MoviesData.total_results + TvShows.total_results,
-      };
-
-      return combinedData;
+      const response = await axios.request(options);
+      return response.data;
     } catch (error) {
       console.log(error);
     }
@@ -180,7 +164,7 @@ export const apiTMDB = {
   getAllTvShows: async function (params) {
     const options = {
       method: "GET",
-      url: `https://api.themoviedb.org/3/discover/tv?include_adult=false&include_null_first_air_dates=false&language=en-US&page=${params}&sort_by=popularity.desc`,
+      url: `${pathname}/tv/popular?language=en-US&page=${params}`,
       headers: {
         accept: "application/json",
         Authorization: `Bearer ${apiKey}`,
@@ -210,7 +194,7 @@ export const apiTMDB = {
       console.log(error);
     }
   },
-  getPersonAllData: async function (data) {
+  getPersonAllData: async function (id) {
     const options = {
       headers: {
         accept: "application/json",
@@ -219,22 +203,24 @@ export const apiTMDB = {
     };
 
     const endpoints = [
-      `${pathname}/person/${data.id}?language=en-US`,
-      `${pathname}/person/${data.id}/combined_credits?language=en-US`,
+      `${pathname}/person/${id}?language=en-US`,
+      `${pathname}/person/${id}/combined_credits?language=en-US`,
+      `${pathname}/person/${id}/tagged_images?page=1`,
     ];
 
     try {
-      const [details, credits] = await Promise.all(
+      const [details, credits, tagimages] = await Promise.all(
         endpoints.map((url) => axios.get(url, options))
       );
 
       const DetailsData = details.data;
       const CreditsData = credits.data;
+      const TaggedImages = tagimages.data;
 
       const combinedData = {
-        ...data,
-        other_details: DetailsData,
+        ...DetailsData,
         credits: CreditsData,
+        taggedImages: TaggedImages,
       };
       return combinedData;
     } catch (error) {}

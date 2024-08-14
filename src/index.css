@@ -16,3 +16,18 @@
 
   @apply w-full px-0.5;
 }
+
+::-webkit-scrollbar {
+  height: 12px;
+  width: 5px;
+  background: #0c1618;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e373c;
+  -webkit-border-radius: 1ex;
+}
+
+::-webkit-scrollbar-corner {
+  background: #0c1618;
+}

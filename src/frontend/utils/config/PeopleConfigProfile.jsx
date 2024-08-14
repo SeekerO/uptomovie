@@ -9,13 +9,14 @@ const PeopleConfigProfile = ({ people }) => {
   return (
     <>
       <Link
-        className="flex flex-col group text-center mt-4 justify-center items-center w-full"
+        to={"/person/" + people.id}
+        className="flex flex-col group text-center mt-4 justify-center items-center w-fit"
         onClick={() => setopenDetails(true)}
       >
-        <div className="relative md:h-[45dvh] md:w-[30dvh] h-[220px] w-[150px] flex justify-end  cursor-pointer ">
+        <div className="relative h-[220px] w-[150px] flex justify-end  cursor-pointer ">
           <AsyncImage
             src={"" || imgURL + people.profile_path}
-            loader={<div style={{ background: "#888" }} />}
+            loader={<div style={{ background: "#f1f5f9" }} />}
             className="w-full h-full object-cover rounded-md border-[1px] bg-black  border-slate-800 group-hover:opacity-50  duration-300  group-hover:scale-105 "
           />
 
@@ -25,7 +26,7 @@ const PeopleConfigProfile = ({ people }) => {
           </div>
         </div>
         <p className="text-[16px] md:w-[200px] w-[100px] font-semibold text-center mt-1 truncate overflow-hidden ">
-          {people.name} {people.id}
+          {people.name}
         </p>
       </Link>
     </>

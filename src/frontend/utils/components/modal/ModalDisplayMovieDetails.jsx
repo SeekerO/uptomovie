@@ -274,15 +274,21 @@ function DisplayMovieDetails({ inDisplay, setopenDetails, Movie_id, film }) {
                   className="w-full"
                 >
                   <h1 className="text-[25px] font-semibold">Recommendations</h1>
-                  <div className="grid gap-4 md:grid-cols-[repeat(auto-fit,minmax(300px,1fr))] grid-cols-2 mx-auto my-0 w-full px-0.5">
-                    {MovieData.recommendations.map((recom, idx) => (
-                      <div key={recom.id} className="mt-10">
+
+                  <div className="relative mt-1 p-2">
+                    <div className="flex overflow-x-auto overflow-y-hidden whitespace-nowrap gap-3">
+                      {MovieData.recommendations.map((recom, index) => (
                         <MovieConfigPoster
+                          key={index}
                           movie={recom}
                           displayPercentage={false}
                         />
-                      </div>
-                    ))}
+                      ))}
+                    </div>
+
+                    {MovieData.recommendations.length > 4 && (
+                      <div className="absolute top-0 right-0 h-full w-20 pointer-events-none bg-gradient-to-l from-[#1D1F2B]/95 to-transparent"></div>
+                    )}
                   </div>
                 </motion.div>
               </div>

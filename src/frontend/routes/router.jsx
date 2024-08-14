@@ -10,8 +10,13 @@ const TvShows = lazy(() => import("../layout/main/tvshows/TvShows"));
 const SearchitemPage = lazy(() =>
   import("../layout/main/searchedItemPage/SearchitemPage")
 );
-const LoadingLanding = lazy(() => import("../utils/components/loading/LoadingLanding"));
+const LoadingLanding = lazy(() =>
+  import("../utils/components/loading/LoadingLanding")
+);
 const PeoplePage = lazy(() => import("../layout/main/peoplePage/PeoplePage"));
+const PersonInfo = lazy(() =>
+  import("../layout/main/peoplePage/PersonInfo/PersonInfo")
+);
 const router = () => {
   return (
     <Suspense fallback={<LoadingLanding />}>
@@ -24,6 +29,7 @@ const router = () => {
         />
         <Route path="/tvshows/:page" element={<TvShows />} />
         <Route path="/people/:page" element={<PeoplePage />} />
+        <Route path="/person/:id" element={<PersonInfo />} />
       </Routes>
     </Suspense>
   );

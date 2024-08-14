@@ -1,32 +1,20 @@
 import React, { useState } from "react";
 import { AsyncImage } from "loadable-image";
+
 import { BiSolidCameraMovie } from "react-icons/bi";
 import CircularProgress from "../components/CircularProgress";
 import ModalDisplayMovieDetails from "../../utils/components/modal/ModalDisplayMovieDetails";
 import { MovieImageURL } from "../utils/url";
 import ModalDisplayTvShowsDetails from "../components/modal/ModalDisplayTvShowDetails";
-const MovieConfig = ({ movie, displayPercentage, film, forViewOnly }) => {
-  console.log(film);
+const SearchedPosterConfig = ({ movie, displayPercentage, film }) => {
   const [openDetails, setopenDetails] = useState(false);
   const imgURL = MovieImageURL();
-
-  const isFilm = () => {
-    if (movie.media_type === undefined && film === "tv") {
-      return film === "tv" ? true : false;
-    } else {
-      return movie.media_type === "tv" ? true : false;
-    }
-  };
-
-  const functionOpenDetails = () => {
-    forViewOnly === undefined && setopenDetails(true);
-  };
 
   return (
     <>
       <div
         className="flex flex-col group text-center mt-4 justify-center items-center w-full"
-        onClick={() => functionOpenDetails()}
+        onClick={() => setopenDetails(true)}
       >
         <div className="relative md:h-[45dvh] md:w-[30dvh] h-[220px] w-[150px] flex justify-end  cursor-pointer ">
           <AsyncImage
@@ -36,33 +24,21 @@ const MovieConfig = ({ movie, displayPercentage, film, forViewOnly }) => {
           />
 
           {displayPercentage && (
-            <>
-              {Math.round(movie.vote_average) === 0 ? (
-                <div className="absolute text-[#EE2B47] bg-slate-100 rounded-md -mt-2 p-1 font-semibold -mr-2">
-                  Upcoming
-                </div>
-              ) : (
-                <CircularProgress percentage={Math.round(movie.vote_average)} />
-              )}
-            </>
+            <CircularProgress percentage={Math.round(movie.vote_average)} />
           )}
-          {forViewOnly === undefined && (
-            <div className="absolute w-full h-full items-center  scale-105 z-0 justify-center hidden group-hover:flex flex-col ">
-              <BiSolidCameraMovie className="text-[50px]" />
-              {Math.round(movie.vote_average) === 0
-                ? "Upcoming No Trailer"
-                : "Watch Trailer"}
-            </div>
-          )}
+
+          <div className="absolute w-full h-full items-center  scale-105 z-0 justify-center hidden group-hover:flex flex-col ">
+            <BiSolidCameraMovie className="text-[50px]" />
+            Watch Trailer
+          </div>
         </div>
         <p className="text-[14px] md:w-[200px] w-[100px] font-semibold text-center mt-1 truncate overflow-hidden ">
-          {movie.title} {movie.name}
+          {movie.title}       {movie.name}
         </p>
       </div>
-
-      {openDetails && movie.id && Math.round(movie.vote_average) !== 0 && (
+      {openDetails && movie.id && (
         <>
-          {!isFilm() ? (
+          {movie.media_type !== "tv" ? (
             <ModalDisplayMovieDetails
               inDisplay={openDetails}
               setopenDetails={setopenDetails}
@@ -82,4 +58,4 @@ const MovieConfig = ({ movie, displayPercentage, film, forViewOnly }) => {
   );
 };
 
-export default MovieConfig;
+export default SearchedPosterConfig;
