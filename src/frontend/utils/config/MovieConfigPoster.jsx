@@ -6,7 +6,6 @@ import ModalDisplayMovieDetails from "../../utils/components/modal/ModalDisplayM
 import { MovieImageURL } from "../utils/url";
 import ModalDisplayTvShowsDetails from "../components/modal/ModalDisplayTvShowDetails";
 const MovieConfig = ({ movie, displayPercentage, film, forViewOnly }) => {
-  console.log(film);
   const [openDetails, setopenDetails] = useState(false);
   const imgURL = MovieImageURL();
 
