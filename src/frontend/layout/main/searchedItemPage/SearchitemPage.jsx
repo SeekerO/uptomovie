@@ -26,7 +26,7 @@ const SearchitemPage = () => {
 
   return (
     <div className="h-full w-full bg-gradient-to-t from-[#E6E6E6] relative">
-      {searchedItems?.length !== 0 ? (
+      {searchedItems?.results?.length !== 0 || searchedItems.length !== 0 ? (
         <>
           <Hero nowPlayingList={searchedItems?.results[0]} />
 
