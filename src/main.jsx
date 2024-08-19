@@ -6,7 +6,7 @@ import "react-multi-carousel/lib/styles.css";
 import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <BrowserRouter basename="/subpath">
+  <BrowserRouter>
     <App />
     {/* </React.StrictMode>  <React.StrictMode> */}
   </BrowserRouter>
