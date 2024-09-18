@@ -1,4 +1,3 @@
-import React from "react";
 import PeopleConfigProfile from "../../config/PeopleConfigProfile";
 
 const DisplayPeople = ({ meta_data }) => {
