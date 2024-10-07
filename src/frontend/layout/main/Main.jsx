@@ -1,6 +1,4 @@
-import React from "react";
 import Header from "../header/Header";
-import Footer from "../footer/Footer";
 import Router from "../../routes/router";
 
 const Main = () => {
@@ -14,9 +12,7 @@ const Main = () => {
         <div className="h-screen bg-black">
           <Router />
         </div>
-        <div className="">
-          {/* <Footer /> */}
-        </div>
+        <div className="">{/* <Footer /> */}</div>
       </main>
     </div>
   );
