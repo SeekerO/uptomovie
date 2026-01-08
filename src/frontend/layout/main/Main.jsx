@@ -3,8 +3,8 @@ import Router from "../../routes/router";
 
 const Main = () => {
   return (
-    <div className="h-screen w-full flex flex-col overflow-y-auto text-[#F0EEE2] bg-black">
-      <header className="w-full justify-center flex md:mt-2 mt-3 fixed  z-10">
+    <div className="h-screen w-full flex flex-col overflow-y-auto text-[#F0EEE2] bg-black select-none">
+      <header className="w-full justify-center flex md:mt-5 mt-3 fixed  z-10">
         <Header />
       </header>
 

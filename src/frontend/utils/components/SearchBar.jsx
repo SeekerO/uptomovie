@@ -1,66 +1,72 @@
 import React, { useEffect, useRef, useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+
 const SearchBar = ({ isShowBar, setShowBar }) => {
-  const [searchTerm, setSearchTerm] = useState();
-  const [hide, setHide] = useState(false);
-  const searchPoint = useNavigate();
-  const refSearchBar = useRef();
+  const [searchTerm, setSearchTerm] = useState(""); // Initialize with empty string
+  const navigate = useNavigate();
+  const refSearchBar = useRef(null);
+
+  // Close on click outside
   useEffect(() => {
-    setHide(!hide);
-  }, [isShowBar]);
+    const handleClickOutside = (event) => {
+      if (refSearchBar.current && !refSearchBar.current.contains(event.target)) {
+        setShowBar(false);
+      }
+    };
+    if (isShowBar) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isShowBar, setShowBar]);
 
   const goToMovie = (e) => {
     e.preventDefault();
-    searchPoint("/searchedItem/" + searchTerm + "/" + 1 + "/" + "en-us");
+    if (!searchTerm.trim()) return;
+    navigate(`/searchedItem/${searchTerm}/1/en-us`);
+    setShowBar(false); // Close bar after search
   };
 
-  const handleClickOutside = (event) => {
-    if (refSearchBar.current && !refSearchBar.current.contains(event.target)) {
-      setShowBar(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
   return (
-    <motion.div
-      ref={refSearchBar}
-      initial={isShowBar && { height: 0 }}
-      animate={
-        isShowBar
-          ? { height: "fit-content", padding: "0.25rem" }
-          : { height: 0 }
-      }
-      className="flex bg-[#1D1F2B] backdrop-blur-[5px] bg-opacity-40 text-black md:w-[100dvh] w-[80%] mt-1 rounded-md items-center gap-1 overflow-hidden"
-    >
-      <motion.form
-        onSubmit={goToMovie}
-        initial={isShowBar && { opacity: 0 }}
-        animate={isShowBar ? { opacity: 1 } : { opacity: 0 }}
-        // transition={isShowBar ? { duration: 1, delay: 1.1 } : { duration: 0 }}
-        className="w-full flex items-center justify-center gap-2"
-      >
-        <CiSearch hidden={hide} className="text-[25px] text-[#EE2B47]" />
-        <div className="w-full">
-          <motion.input
-            placeholder="Search movie and tv shows here.."
-            required
-            onChange={(e) => setSearchTerm(e.target.value)}
-            value={searchTerm}
-            type="search"
-            className="px-1 py-2 w-full outline-none border-[1px] border-slate-500 rounded-md bg-slate-300"
-            hidden={hide}
-          />
-        </div>
-      </motion.form>
-    </motion.div>
+    <AnimatePresence>
+      {isShowBar && (
+        <motion.div
+          ref={refSearchBar}
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          className="absolute top-full left-1/2 -translate-x-1/2 w-[90%] md:w-[600px] mt-2 z-[101]"
+        >
+          <div className="bg-[#1D1F2B]/90 backdrop-blur-xl border border-white/10 p-2 rounded-xl shadow-2xl">
+            <form
+              onSubmit={goToMovie}
+              className="flex items-center gap-3 px-3"
+            >
+              <CiSearch className="text-2xl text-[#EE2B47] flex-shrink-0" />
+              <input
+                autoFocus
+                placeholder="Search movies and TV shows..."
+                required
+                onChange={(e) => setSearchTerm(e.target.value)}
+                value={searchTerm}
+                type="text"
+                className="w-full py-2 bg-transparent text-white outline-none placeholder:text-slate-500 text-lg"
+              />
+              {searchTerm && (
+                <button
+                  type="button"
+                  onClick={() => setSearchTerm("")}
+                  className="text-slate-500 hover:text-white"
+                >
+                  ✕
+                </button>
+              )}
+            </form>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 

@@ -4,9 +4,9 @@ tailspin.register();
 
 const LoadingScreen = () => {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 h-full rounded-sm w-screen flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 h-full w-full rounded-sm flex items-center justify-center z-50">
       <l-tailspin
-   
+
         size="50"
         stroke="5"
         speed="0.9"

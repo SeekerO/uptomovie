@@ -3,65 +3,77 @@ import { AsyncImage } from "loadable-image";
 import { BiSolidCameraMovie } from "react-icons/bi";
 import CircularProgress from "../components/CircularProgress";
 import ModalDisplayMovieDetails from "../../utils/components/modal/ModalDisplayMovieDetails";
-import { MovieImageURL } from "../utils/url";
 import ModalDisplayTvShowsDetails from "../components/modal/ModalDisplayTvShowDetails";
+import { MovieImageURL } from "../utils/url";
+
 const MovieConfig = ({ movie, displayPercentage, film, forViewOnly }) => {
   const [openDetails, setopenDetails] = useState(false);
   const imgURL = MovieImageURL();
 
-  const isFilm = () => {
-    if (movie.media_type === undefined && film === "tv") {
-      return film === "tv" ? true : false;
-    } else {
-      return movie.media_type === "tv" ? true : false;
-    }
+  const isTvShow = () => {
+    // Priority 1: Check media_type if available (from search/trending)
+    if (movie.media_type) return movie.media_type === "tv";
+    // Priority 2: Check the explicit 'film' prop passed to the component
+    return film === "tv";
   };
 
-  const functionOpenDetails = () => {
-    forViewOnly === undefined && setopenDetails(true);
+  const handleOpenDetails = () => {
+    // Only open if we aren't in 'view only' mode
+    if (forViewOnly === undefined) {
+      setopenDetails(true);
+    }
   };
 
   return (
     <>
       <div
-        className="flex flex-col group text-center mt-4 justify-center items-center w-full"
-        onClick={() => functionOpenDetails()}
+        className="flex flex-col group cursor-pointer w-full max-w-[200px] mx-auto relative"
+        onClick={handleOpenDetails}
       >
-        <div className="relative md:h-[45dvh] md:w-[30dvh] h-[220px] w-[150px] flex justify-end  cursor-pointer ">
+        {/* --- POSTER CONTAINER --- */}
+        <div className=" aspect-[2/3] w-full overflow-hidden rounded-xl bg-slate-900 border border-white/5 shadow-lg transition-all duration-500 group-hover:shadow-blue-500/20 group-hover:border-blue-500/30 group-hover:-translate-y-2">
+
           <AsyncImage
-            src={"" || imgURL + movie.poster_path}
-            loader={<div style={{ background: "#888" }} />}
-            className="w-full h-full object-cover rounded-md border-[1px] bg-black  border-slate-800 group-hover:opacity-50  duration-300  group-hover:scale-105 "
+            src={imgURL + movie.poster_path}
+            loader={<div className="w-full h-full bg-slate-800 animate-pulse" />}
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:opacity-40"
+            alt={movie.title || movie.name}
           />
 
-          {displayPercentage && (
-            <>
-              {Math.round(movie.vote_average) === 0 ? (
-                <div className="absolute text-[#EE2B47] bg-slate-100 rounded-md -mt-2 p-1 font-semibold -mr-2">
-                  Upcoming
-                </div>
-              ) : (
-                <CircularProgress percentage={Math.round(movie.vote_average)} />
-              )}
-            </>
-          )}
+          {/* --- OVERLAY CONTENT --- */}
           {forViewOnly === undefined && (
-            <div className="absolute w-full h-full items-center  scale-105 z-0 justify-center hidden group-hover:flex flex-col ">
-              <BiSolidCameraMovie className="text-[50px]" />
-              {Math.round(movie.vote_average) === 0
-                ? "Upcoming No Trailer"
-                : "Watch Trailer"}
+            <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+              <div className="bg-blue-600 p-3 rounded-full shadow-xl mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                <BiSolidCameraMovie className="text-white text-2xl" />
+              </div>
+              <span className="text-white text-[10px] font-bold uppercase tracking-widest bg-black/40 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
+                View Details
+              </span>
             </div>
           )}
+
+
+
+          {/* Subtle Bottom Gradient */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
         </div>
-        <p className="text-[14px] md:w-[200px] w-[100px] font-semibold text-center mt-1 truncate overflow-hidden ">
-          {movie.title} {movie.name}
-        </p>
+
+        {/* --- TEXT CONTENT --- */}
+        <div className="mt-3 text-left">
+          <h3 className="text-[13px] font-bold text-slate-200 truncate group-hover:text-blue-400 transition-colors">
+            {movie.title || movie.name}
+          </h3>
+          <p className="text-[11px] text-slate-500 font-medium">
+            {movie.release_date ? movie.release_date.split("-")[0] : movie.first_air_date?.split("-")[0] || "Release TBD"}
+          </p>
+        </div>
+
       </div>
 
-      {openDetails && movie.id && Math.round(movie.vote_average) !== 0 && (
+      {/* --- MODAL LOGIC --- */}
+      {openDetails && movie.id && (
         <>
-          {!isFilm() ? (
+          {!isTvShow() ? (
             <ModalDisplayMovieDetails
               inDisplay={openDetails}
               setopenDetails={setopenDetails}

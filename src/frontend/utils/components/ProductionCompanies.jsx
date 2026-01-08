@@ -15,10 +15,10 @@ const ProductionCompanies = ({ item, index }) => {
       {item.logo_path !== null ? (
         <img
           src={imgURL + item.logo_path}
-          className="w-[100px] bg-white p-1 rounded-md "
+          className="w-[100px] bg-white p-1 rounded-md h-[70px] object-contain "
         />
       ) : (
-        <div className="min-w-[100px] max-w-[150px] bg-white text-black font-semibold p-1 rounded-md text-center">
+        <div className="min-w-[100px] max-w-[150px]  bg-white text-black font-semibold p-1 rounded-md text-center">
           {item.name}
         </div>
       )}

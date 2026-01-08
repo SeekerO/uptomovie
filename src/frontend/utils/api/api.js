@@ -1,7 +1,34 @@
 import axios from "axios";
 const pathname = "https://api.themoviedb.org/3";
 const apiKey = import.meta.env.VITE_TMBD_API_KEY;
+
 export const apiTMDB = {
+  getDiscoveryByGenre: async function (genreId, page = 1) {
+    const options = {
+      headers: {
+        accept: "application/json",
+        Authorization: `Bearer ${apiKey}`, // Ensure this is your LONG Read-Access Token, not the short API Key
+      },
+    };
+
+
+    try {
+      const [movieRes, tvRes] = await Promise.all([
+        axios.get(`${pathname}/discover/movie?with_genres=${genreId}&language=en-US&page=${page}&sort_by=popularity.desc`, options),
+        axios.get(`${pathname}/discover/tv?with_genres=${genreId}&language=en-US&page=${page}&sort_by=popularity.desc`, options)
+      ]);
+
+      const movies = movieRes.data.results.map((m) => ({ ...m, media_type: "movie" }));
+      const tvShows = tvRes.data.results.map((t) => ({ ...t, media_type: "tv" }));
+
+      return [...movies, ...tvShows].sort((a, b) => b.popularity - a.popularity);
+    } catch (error) {
+      // Detailed Error Log
+      console.error("API Error Details:", error.response ? error.response.data : error.message);
+      return [];
+    }
+  },
+
   getAllMovieLists: async function () {
     const options = {
       headers: {
@@ -25,16 +52,11 @@ export const apiTMDB = {
         upcomingResponse,
       ] = await Promise.all(endpoints.map((url) => axios.get(url, options)));
 
-      const nowPlayingList = nowPlayingResponse.data;
-      const popularList = popularResponse.data;
-      const topRatedList = topRatedResponse.data;
-      const upcomingList = upcomingResponse.data;
-
       return {
-        nowPlayingList,
-        popularList,
-        topRatedList,
-        upcomingList,
+        nowPlayingList: nowPlayingResponse.data,
+        popularList: popularResponse.data,
+        topRatedList: topRatedResponse.data,
+        upcomingList: upcomingResponse.data,
       };
     } catch (error) {
       console.log(error);
@@ -57,20 +79,20 @@ export const apiTMDB = {
       `${pathname}/movie/${id}/reviews?language=en-US&page=1`,
     ];
 
-    const [details, videos, credits, recommendations, reviews] =
-      await Promise.all(endpoints.map((url) => axios.get(url, options)));
-
     try {
-      const combinedResponse = {
+      const [details, videos, credits, recommendations, reviews] =
+        await Promise.all(endpoints.map((url) => axios.get(url, options)));
+
+      return {
         ...details.data,
         videos: videos.data,
         credits: credits.data,
         recommendations: recommendations.data.results,
         reviews: reviews.data,
       };
-
-      return combinedResponse;
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }
   },
 
   getSingleTvShowData: async function (id) {
@@ -95,22 +117,22 @@ export const apiTMDB = {
       `${pathname}/tv/${id}/watch/providers`,
     ];
 
-    const [
-      details,
-      videos,
-      credits,
-      recommendations,
-      reviews,
-      account_states,
-      images,
-      keywords,
-      latest,
-      similar,
-      providers,
-    ] = await Promise.all(endpoints.map((url) => axios.get(url, options)));
-
     try {
-      const combinedResponse = {
+      const [
+        details,
+        videos,
+        credits,
+        recommendations,
+        reviews,
+        account_states,
+        images,
+        keywords,
+        latest,
+        similar,
+        providers,
+      ] = await Promise.all(endpoints.map((url) => axios.get(url, options)));
+
+      return {
         ...details.data,
         videos: videos.data,
         credits: credits.data,
@@ -123,15 +145,15 @@ export const apiTMDB = {
         similar: similar.data,
         providers: providers.data,
       };
-
-      return combinedResponse;
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }
   },
 
   getSearchMovieByParam: async function (param) {
     const options = {
       method: "GET",
-      url: `${pathname}/search/multi?query=${param.id}}&include_adult=false&language=${param.language}&page=${param.page}`,
+      url: `${pathname}/search/multi?query=${param.id}&include_adult=false&language=${param.language}&page=${param.page}`,
       headers: {
         accept: "application/json",
         Authorization: `Bearer ${apiKey}`,
@@ -161,6 +183,7 @@ export const apiTMDB = {
       console.log(error);
     }
   },
+
   getAllTvShows: async function (params) {
     const options = {
       method: "GET",
@@ -177,6 +200,7 @@ export const apiTMDB = {
       console.log(error);
     }
   },
+
   getPeopleList: async function (params) {
     const options = {
       method: "GET",
@@ -194,6 +218,7 @@ export const apiTMDB = {
       console.log(error);
     }
   },
+
   getPersonAllData: async function (id) {
     const options = {
       headers: {
@@ -213,16 +238,13 @@ export const apiTMDB = {
         endpoints.map((url) => axios.get(url, options))
       );
 
-      const DetailsData = details.data;
-      const CreditsData = credits.data;
-      const TaggedImages = tagimages.data;
-
-      const combinedData = {
-        ...DetailsData,
-        credits: CreditsData,
-        taggedImages: TaggedImages,
+      return {
+        ...details.data,
+        credits: credits.data,
+        taggedImages: tagimages.data,
       };
-      return combinedData;
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }
   },
 };

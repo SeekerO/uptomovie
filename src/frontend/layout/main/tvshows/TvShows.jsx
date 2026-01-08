@@ -27,10 +27,18 @@ const TvShows = () => {
     <div className="w-full h-full md:px-20 px-10 flex flex-col">
       {tvShows?.length !== 0 ? (
         <div className="mt-24 flex flex-col">
+          <div className="space-y-2 ">
+            <h1 className="text-4xl md:text-6xl font-black tracking-tighter uppercase">
+              Popular <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-[#701705]">TV SHOWS</span>
+            </h1>
+            <p className="text-gray-400 font-medium max-w-md">
+              Discover the trending TV Shows.
+            </p>
+          </div>
           <DisplayMovieByCategory
             film="tv"
             meta_data={tvShows.results}
-            title={"Discover Tv Shows"}
+            title={""}
           />
           <div className="mt-10 w-full justify-center flex mb-10">
             <Pagination

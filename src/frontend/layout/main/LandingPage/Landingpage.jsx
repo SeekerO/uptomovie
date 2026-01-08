@@ -14,8 +14,11 @@ const Landingpage = () => {
     fetchList();
   }, []);
 
+
+
+
   return (
-    <div className="h-full w-full bg-gradient-to-t from-[#E6E6E6] relative">
+    <div className="h-full w-full bg-gradient-to-t from-[#690000] relative">
       {movieList.length !== 0 && (
         <>
           <Hero nowPlayingList={movieList?.nowPlayingList.results[0]} />

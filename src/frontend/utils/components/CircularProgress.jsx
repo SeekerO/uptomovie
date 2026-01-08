@@ -5,7 +5,7 @@ const CircularProgress = ({ percentage }) => {
   return (
     <div
       style={{ width: 50, height: 50 }}
-      className="rounded-full absolute -mt-5 -mr-2"
+      className="rounded-full z-40"
     >
       <CircularProgressbar
         value={percentage}

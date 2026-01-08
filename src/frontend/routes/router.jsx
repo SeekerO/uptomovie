@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import Adminpanel from "../layout/main/admin/adminpanel";
+const GenrePage = lazy(() => import("../layout/main/genre/Genre"));
 
 const Landingpage = lazy(() =>
   import("../layout/main/LandingPage/Landingpage")
@@ -31,6 +32,7 @@ const router = () => {
         <Route path="/tvshows/:page" element={<TvShows />} />
         <Route path="/people/:page" element={<PeoplePage />} />
         <Route path="/person/:id" element={<PersonInfo />} />
+        <Route path="/genre/:genreName" element={<GenrePage />} />
         <Route path="/siomaiadminpanel" element={<Adminpanel />} />
       </Routes>
     </Suspense>
